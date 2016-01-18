@@ -39,7 +39,8 @@ class PosExtractor(BaseExtractor) :
             self.cluster = [noun, time, place, name, adjective, verb, adverb, conjunction, mood, quantity]
         else :
             self.cluster = [[idx] for idx in range(len(self.pos_dict))]
-        self.names = self.pos_dict.keys()
+        self.names = [value + '_avg' for value in self.pos_dict.keys()] + \
+            [value + '_var' for value in self.pos_dict.keys()]
         
     def _read_dictionary(self, pos_path) :
         file_operator = TextFileOperator()
@@ -159,6 +160,9 @@ class WordExtractor(BaseExtractor) :
         self.secpro_dict = dict().fromkeys([u'\u4f60', u'\u60a8'])
         self.thrpro_dict = dict().fromkeys([u'\u4ed6', u'\u5979', u'\u5b83'])
         self.word_dict = self._read_dictionary(word_path)
+        self.names = ['n_firpro', 'n_secpro', 'n_thrpro', \
+            'n_title_name', 'n_title_time', 'n_title_place', 'n_content_name', \
+            'n_content_time', 'n_content_place', 'n_knowldegeable_word']
         
     def _read_dictionary(self, pro_path) :
         file_operator = TextFileOperator()

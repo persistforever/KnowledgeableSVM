@@ -53,7 +53,8 @@ class Corpus :
                                                                         article['participle_content']))
             print 'finish rate is %.2f%%\r' % (100.0*idx/length),
         print 'finish rate is %.2f%%\r' % (100.0*idx/length)
-        featuresets = [[article['id']] + article['features'] + [article['label']] for article in articles]
+        featuresets = [pos_selector.names + token_selector.names + word_selector.names]
+        featuresets .extend([[article['id']] + article['features'] + [article['label']] for article in articles])
         file_operator = TextFileOperator()
         file_operator.writing(featuresets, feature_path)
         loader.dump_market(featuresets, feature_market_path)
@@ -62,21 +63,22 @@ class Corpus :
     def run_classify(self, train_path, test_path) :
         loader = PickleMarket()
         # read train
-        articles = list()
-        for type in [u'finance'] :
+        feature_names = loader.load_market(train_path)[0]
+        train_articles = list()
+        for type in [u'car'] :
             path = train_path.replace(u'car', type)
-            articles.extend(loader.load_market(path))
-        train_dataset = np.array([np.array(article[1:-1], dtype=float) for article in articles])
+            train_articles.extend(loader.load_market(path)[1:])
+        train_dataset = np.array([np.array(article[1:-1], dtype=float) for article in train_articles])
         print train_dataset.shape
-        train_label = np.array([np.array(int(article[-1])) for article in articles])
+        train_label = np.array([np.array(int(article[-1])) for article in train_articles])
         # read test
-        articles = list()
-        for type in [u'car', u'finance', u'web'] :
+        test_articles = list()
+        for type in [u'car'] :
             path = test_path.replace(u'car', type)
-            articles.extend(loader.load_market(path))
-        test_dataset = np.array([np.array(article[1:-1]) for article in articles])
+            test_articles.extend(loader.load_market(path)[1:])
+        test_dataset = np.array([np.array(article[1:-1]) for article in test_articles])
         print test_dataset.shape
-        test_label = np.array([np.array(int(article[-1])) for article in articles])
+        test_label = np.array([np.array(int(article[-1])) for article in test_articles])
         # train cls
         classifier = SvmClassifier()
         train_dataset = classifier.normalize(train_dataset, method='mapminmax')
