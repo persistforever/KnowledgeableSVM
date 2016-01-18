@@ -38,7 +38,7 @@ class Corpus :
     def run_feature_select(self, article_market_path, pos_path, punc_path, klword_path, \
         feature_path, feature_market_path) :
         loader = PickleMarket()
-        pos_selector = selector.PosExtractor(pos_path, w=5, combined=True)
+        pos_selector = selector.PosExtractor(pos_path, w=15, combined=False)
         token_selector = selector.TokenExtractor(punc_path)
         word_selector = selector.WordExtractor(klword_path, weight=1)
         articles = loader.load_market(article_market_path)
@@ -63,16 +63,16 @@ class Corpus :
         loader = PickleMarket()
         # read train
         articles = list()
-        for type in [u'car', u'finance', u'web'] :
-            path = train_path.replace(u'all', type)
+        for type in [u'finance'] :
+            path = train_path.replace(u'car', type)
             articles.extend(loader.load_market(path))
-        train_dataset = np.array([np.array(article[1:-1]) for article in articles])
+        train_dataset = np.array([np.array(article[1:-1], dtype=float) for article in articles])
         print train_dataset.shape
         train_label = np.array([np.array(int(article[-1])) for article in articles])
         # read test
         articles = list()
         for type in [u'car', u'finance', u'web'] :
-            path = test_path.replace(u'all', type)
+            path = test_path.replace(u'car', type)
             articles.extend(loader.load_market(path))
         test_dataset = np.array([np.array(article[1:-1]) for article in articles])
         print test_dataset.shape
@@ -81,7 +81,7 @@ class Corpus :
         classifier = SvmClassifier()
         train_dataset = classifier.normalize(train_dataset, method='mapminmax')
         test_dataset = classifier.normalize(test_dataset, method='mapminmax')
-        classifier.training(train_dataset, train_label, cset=range(10, 100, 10), kernel='linear')
+        classifier.training(train_dataset, train_label, c=10, kernel='linear')
         # test cls
         test_prob = classifier.testing(test_dataset, type='prob')
         test_class = classifier.testing(test_dataset, type='label')

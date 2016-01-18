@@ -38,7 +38,8 @@ class PosExtractor(BaseExtractor) :
         if combined :
             self.cluster = [noun, time, place, name, adjective, verb, adverb, conjunction, mood, quantity]
         else :
-            self.cluster = [range(len(self.pos_dict))]
+            self.cluster = [[idx] for idx in range(len(self.pos_dict))]
+        self.names = self.pos_dict.keys()
         
     def _read_dictionary(self, pos_path) :
         file_operator = TextFileOperator()
@@ -68,6 +69,7 @@ class PosExtractor(BaseExtractor) :
             for idx in term :
                 value_list[index] += mean_set[idx]
                 value_list[index+len(self.cluster)] += var_set[idx]
+        value_list = [float(value) for value in value_list]
         return value_list
 
 
@@ -78,6 +80,9 @@ class TokenExtractor(BaseExtractor) :
 
         self.split_dict = dict().fromkeys([u'\u3002', u'\uff01', u'\uff1f'])
         self.punc_dict = self._read_dictionary(pc_path)
+        self.names = ['title_length', 'content_length', 'n_title_word', \
+            'n_content_word', 'n_dist_title_word', 'n_dist_content_word', 'n_title_punc', \
+            'n_content_punc', 'n_paragraph', 'n_sentence', 'avg_sentence_lenght', 'avg_paragraph_lenght']
         
     def _read_dictionary(self, pro_path) :
         file_operator = TextFileOperator()

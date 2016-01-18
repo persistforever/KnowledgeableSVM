@@ -1,5 +1,5 @@
-train_type=all
-test_type=all
+train_type=car
+test_type=car
 
 
 train_path=E:/data/knowledge/classify/$train_type/trainset_feature_market

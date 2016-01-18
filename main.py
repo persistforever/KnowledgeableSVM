@@ -36,16 +36,15 @@ def pretreate() :
 def classify() :
     from classify.run import Corpus
     from file.path_manager import PathManager
-    articles_path = PathManager.CORPUS_ARTICLE
-    # participles_path = PathManager.CORPUS_SPLIT
-    article_market_path = PathManager.CORPUS_SUBTITLE
-    feature_path = PathManager.CORPUS_FEATURE
-    feature_market_path = PathManager.CORPUS_SENTENCE
-    pos_path = PathManager.TOOLS_POS
-    punc_path = PathManager.TOOLS_PUNCTUATION
-    klword_path = PathManager.TOOLS_KNOWLEDGEABLEWORD
-    train_path = PathManager.CLASSIFIER_TRAINDATA
-    test_path = PathManager.CLASSIFIER_TESTDATA
+    articles_path='E:/data/knowledge/classify/car/article_trainset'
+    article_market_path='E:/data/knowledge/classify/car/article_trainset_market'
+    feature_path='E:/data/knowledge/classify/car/trainset_feature'
+    feature_market_path='E:/data/knowledge/classify/car/trainset_feature_market'
+    pos_path='E:/data/knowledge/tools/postag'
+    punc_path='E:/data/knowledge/tools/punctuation'
+    klword_path='E:/data/knowledge/tools/knowledgeable_word'
+    train_path='E:/data/knowledge/classify/car/trainset_feature_market'
+    test_path='E:/data/knowledge/classify/car/testset_feature_market'
     corpus = Corpus()
     corpus.run(articles_path, article_market_path, \
         pos_path, punc_path, klword_path, feature_path, feature_market_path, \
