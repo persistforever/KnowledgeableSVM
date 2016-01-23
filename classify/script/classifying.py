@@ -13,5 +13,7 @@ from classify.run import Corpus
 
 train_path = sys.argv[1]
 test_path = sys.argv[2]
+train_set = sys.argv[3]
+test_set = sys.argv[4]
 corpus = Corpus()
-corpus.run_classify(train_path, test_path)
+corpus.run_classify(train_path, test_path, train_set, test_set)

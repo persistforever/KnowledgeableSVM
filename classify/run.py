@@ -60,12 +60,12 @@ class Corpus :
         loader.dump_market(featuresets, feature_market_path)
         print 'finish'
 
-    def run_classify(self, train_path, test_path) :
+    def run_classify(self, train_path, test_path, train_set, test_set) :
         loader = PickleMarket()
         # read train
         feature_names = loader.load_market(train_path)[0]
         train_articles = list()
-        for type in [u'car'] :
+        for type in train_set.split('#') :
             path = train_path.replace(u'car', type)
             train_articles.extend(loader.load_market(path)[1:])
         train_dataset = np.array([np.array(article[1:-1], dtype=float) for article in train_articles])
@@ -73,7 +73,7 @@ class Corpus :
         train_label = np.array([np.array(int(article[-1])) for article in train_articles])
         # read test
         test_articles = list()
-        for type in [u'car'] :
+        for type in test_set.split('#') :
             path = test_path.replace(u'car', type)
             test_articles.extend(loader.load_market(path)[1:])
         test_dataset = np.array([np.array(article[1:-1]) for article in test_articles])
