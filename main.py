@@ -60,10 +60,25 @@ def embedding() :
     corpus = Corpus()
     corpus.run(articles_path, participle_title_path, sentences_path, sentences_path, \
         word_embedding_path, word_embedding_path)
+    
+def bowlr() :
+    from bowlr.run import Corpus
+    from file.path_manager import PathManager
+    articles_path='E:/file/knowledge/classify/car/article_trainset'
+    article_market_path='E:/file/knowledge/classify/car/article_trainset_market'
+    dictionary_path='E:/file/knowledge/classify/car/dictionary'
+    feature_path='E:/file/knowledge/classify/car/trainset_feature'
+    feature_market_path='E:/file/knowledge/classify/car/trainset_feature_market'
+    train_path='E:/file/knowledge/classify/car/trainset_feature_market'
+    test_path='E:/file/knowledge/classify/car/testset_feature_market'
+    corpus = Corpus()
+    corpus.run(articles_path, article_market_path, dictionary_path, feature_path, \
+               feature_market_path, train_path, test_path)
 
 
 if __name__ == '__main__' :
     # tag()
     # pretreate()
-    classify()
+    # classify()
     # embedding()
+    bowlr()
