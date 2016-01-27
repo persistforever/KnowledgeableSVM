@@ -24,9 +24,9 @@ class Corpus :
             train_path, test_path) :
         """ function for script to drive. """
         # self.run_convert_article(article_path, article_market_path)
-        # self.run_feature_select(article_market_path, pos_path, punc_path, klword_path, \
-        #                        feature_path, feature_market_path)
-        self.run_classify(train_path, test_path)
+        self.run_feature_select(article_market_path, pos_path, punc_path, klword_path, \
+                               feature_path, feature_market_path)
+        # self.run_classify(train_path, test_path)
 
     def run_convert_article(self,  article_path, article_market_path) :
         articles = self.read_article(article_path)
@@ -45,7 +45,7 @@ class Corpus :
         length = len(articles) - 1
         for idx, article in enumerate(articles) :
             article['features'] = list()
-            article['features'].extend(pos_selector.extract_feature(article['participle_content']))
+            article['features'].extend(pos_selector.extract_feature_windows(article['participle_content']))
             article['features'].extend(token_selector.extract_feature(article['title'], article['content'], \
                                                                         article['participle_title'], \
                                                                         article['participle_content']))

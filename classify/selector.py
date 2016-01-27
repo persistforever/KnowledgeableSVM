@@ -51,7 +51,7 @@ class PosExtractor(BaseExtractor) :
                 dictionary[data[0]] = 0
         return dictionary
     
-    def extract_feature(self, participle_content) :
+    def extract_feature_windows(self, participle_content) :
         num_list = list()
         for x in range(0, min(len(participle_content), 500) - self.w + 1) :
             pos_hist = dict()
@@ -60,6 +60,31 @@ class PosExtractor(BaseExtractor) :
             for i in range(x, x + self.w) :
                 if participle_content[i].feature in pos_hist :
                     pos_hist[participle_content[i].feature] += 1
+            num_list.append(pos_hist.values())
+        mean_set, var_set = list(), list()
+        for j in range(len(num_list[0])) :
+            mean_set.append(np.mean([line[j] for line in num_list]))
+            var_set.append(np.var([line[j] for line in num_list]))
+        value_list = [0.0] * (2*len(self.cluster))
+        for index, term in enumerate(self.cluster) :
+            for idx in term :
+                value_list[index] += mean_set[idx]
+                value_list[index+len(self.cluster)] += var_set[idx]
+        value_list = [float(value) for value in value_list]
+        return value_list
+    
+    def extract_feature_sentences(self, participle_content) :
+        num_list = list()
+        indexs = [0] + [i for i, x in enumerate(participle_content) if x.name in [u'\u3002']] \
+            + [len(participle_content)-1]
+        for start in range(0, len(indexs)-1) :
+            sentence = participle_content[indexs[start]: indexs[start+1]+1]
+            pos_hist = dict()
+            for key in self.pos_dict.keys() :
+                pos_hist[key] = 0
+            for word in sentence :
+                if word.feature in pos_hist :
+                    pos_hist[word.feature] += 1
             num_list.append(pos_hist.values())
         mean_set, var_set = list(), list()
         for j in range(len(num_list[0])) :

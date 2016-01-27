@@ -83,6 +83,7 @@ class SvmClassifier :
         fpr = 1.0 * fp / (fp + tn)
         evl.append(round(tpr, 4))
         evl.append(round(fpr, 4))
+        evl.append(round((tpr+1-fpr)/2, 4))
         return evl
 
     def storing(self, classifier, path='') :
