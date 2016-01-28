@@ -73,6 +73,7 @@ class SvmClassifier :
         '''
         # return metrics.f1_score(test_label, test_class, pos_label=1, average='binary')
         evl = list()
+        fprs, tprs, thresholds = metrics.roc_curve(test_label, test_prob)
         evl.append(round(metrics.roc_auc_score(test_label, test_prob), 4))
         evl.append(round(metrics.accuracy_score(test_label, test_class), 4))
         tp = len([1 for idx in range(len(test_label)) if test_label[idx] == 1 and test_class[idx] == 1])
