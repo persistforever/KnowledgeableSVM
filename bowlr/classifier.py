@@ -20,7 +20,7 @@ class LrClassifier :
     def training(self, train_dataset, train_label, c=10, \
         kernel='linear') :
         """ Train classifier with train_data and train_label. """
-        self.clf = linear_model.LogisticRegression()
+        self.clf = svm.SVC(C=c, kernel=kernel, probability=True)
         # self.clf = linear_model.LogisticRegression()
         self.clf.fit(train_dataset, train_label)
         print 'training classifier finished ...'
@@ -73,7 +73,7 @@ class LrClassifier :
         '''
         # return metrics.f1_score(test_label, test_class, pos_label=1, average='binary')
         evl = list()
-        fprs, tprs, _ = metrics.roc_auc_score(test_label, test_prob)
+        fprs, tprs, _ = metrics.roc_curve(test_label, test_prob)
         evl.append(round(metrics.roc_auc_score(test_label, test_prob), 4))
         evl.append(round(metrics.accuracy_score(test_label, test_class), 4))
         tp = len([1 for idx in range(len(test_label)) if test_label[idx] == 1 and test_class[idx] == 1])
@@ -84,7 +84,7 @@ class LrClassifier :
         fpr = 1.0 * fp / (fp + tn)
         evl.append(round(tpr, 4))
         evl.append(round(fpr, 4))
-        return evl
+        return evl, fprs, tprs
 
     def storing(self, classifier, path='') :
         """ Store the classifier. """

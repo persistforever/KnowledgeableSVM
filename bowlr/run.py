@@ -20,12 +20,12 @@ class Corpus :
         pass
 
     def run(self, article_path, article_market_path, dictionary_path, feature_path, \
-               feature_market_path, train_path, test_path) :
+               feature_market_path, train_path, test_path, output_path) :
         """ function for script to drive. """
         # self.run_convert_article(article_path, article_market_path, dictionary_path)
         # self.run_feature_select(article_market_path, dictionary_path, \
         #     feature_market_path)
-        self.run_classify(train_path, test_path, 'car#finance#house', 'car#finance#house')
+        self.run_classify(train_path, test_path, 'car#finance#house', 'car#finance#house', output_path)
 
     def run_convert_article(self,  article_path, article_market_path) :
         articles = self.read_article(article_path)
@@ -87,7 +87,7 @@ class Corpus :
         loader.dump_market(featuresets, feature_market_path)
         print 'finish'
 
-    def run_classify(self, train_path, test_path, train_set, test_set) :
+    def run_classify(self, train_path, test_path, train_set, test_set, output_path) :
         loader = PickleMarket()
         # read train
         feature_names = loader.load_market(train_path)[0]
@@ -95,7 +95,7 @@ class Corpus :
         for type in train_set.split('#') :
             path = train_path.replace(u'car', type)
             train_articles.extend(loader.load_market(path)[1:])
-        train_dataset = np.array([np.array(article[1:-1], dtype=float) for article in train_articles])
+        train_dataset = np.array([np.array(article[1:30000], dtype=float) for article in train_articles])
         print train_dataset.shape
         train_label = np.array([np.array(int(article[-1])) for article in train_articles])
         # read test
@@ -103,7 +103,7 @@ class Corpus :
         for type in test_set.split('#') :
             path = test_path.replace(u'car', type)
             test_articles.extend(loader.load_market(path)[1:])
-        test_dataset = np.array([np.array(article[1:-1]) for article in test_articles])
+        test_dataset = np.array([np.array(article[1:30000]) for article in test_articles])
         print test_dataset.shape
         test_label = np.array([np.array(int(article[-1])) for article in test_articles])
         # train cls
@@ -114,7 +114,11 @@ class Corpus :
         # test cls
         test_prob = classifier.testing(test_dataset, type='prob')
         test_class = classifier.testing(test_dataset, type='label')
-        print 'performance is', classifier.evaluation(test_label, test_prob, test_class)
+        evls, fprs, tprs = classifier.evaluation(test_label, test_prob, test_class)
+        print 'performance is', evls
+        ftprs = [[fpr, tprs[idx]] for idx, fpr in enumerate(fprs)]
+        file_operator = TextFileOperator()
+        file_operator.writing(ftprs, output_path)
         print 'finish'
 
     def read_article(self, article_path) :

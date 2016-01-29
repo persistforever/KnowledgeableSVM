@@ -15,5 +15,6 @@ train_path = sys.argv[1]
 test_path = sys.argv[2]
 train_set = sys.argv[3]
 test_set = sys.argv[4]
+output_path = sys.argv[5]
 corpus = Corpus()
-corpus.run_classify(train_path, test_path, train_set, test_set)
+corpus.run_classify(train_path, test_path, train_set, test_set, output_path)

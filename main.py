@@ -71,14 +71,15 @@ def bowlr() :
     feature_market_path='E:/data/knowledge/bowlr/car/trainset_feature_market'
     train_path='E:/data/knowledge/bowlr/car/trainset_feature_market'
     test_path='E:/data/knowledge/bowlr/car/testset_feature_market'
+    output_path='E:/data/knowledge/bowlr/car/fprs_tprs'
     corpus = Corpus()
     corpus.run(articles_path, article_market_path, dictionary_path, feature_path, \
-               feature_market_path, train_path, test_path)
+               feature_market_path, train_path, test_path, output_path)
 
 
 if __name__ == '__main__' :
     # tag()
     # pretreate()
-    classify()
+    # classify()
     # embedding()
-    # bowlr()
+    bowlr()
